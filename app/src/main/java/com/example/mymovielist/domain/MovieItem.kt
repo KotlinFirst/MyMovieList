@@ -1,7 +1,13 @@
 package com.example.mymovielist.domain
 
-data class MovieItem(val id: Int,
+data class MovieItem(
                      val name: String,
                      val duration: Int,
-                     val flag: Boolean)
+                     var flag: Boolean,
+                     var id: Int = UNDEFINED_ID){
+
+    companion object{
+        const val UNDEFINED_ID = -1
+    }
+}
 
