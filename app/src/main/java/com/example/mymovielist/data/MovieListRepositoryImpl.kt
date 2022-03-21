@@ -6,7 +6,7 @@ import com.example.mymovielist.domain.MovieItem
 import com.example.mymovielist.domain.MovieListRepository
 import java.lang.RuntimeException
 
-class MovieListRepositoryImpl:MovieListRepository {
+object MovieListRepositoryImpl:MovieListRepository {
     private var movieListLD = MutableLiveData<List<MovieItem>>()
     private val movieList = mutableListOf<MovieItem>()
     private var autoincrementId = 0

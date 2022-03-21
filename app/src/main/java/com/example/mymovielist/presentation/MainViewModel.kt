@@ -8,7 +8,7 @@ import com.example.mymovielist.domain.*
 
 class MainViewModel:ViewModel() {
 
-    private val repository = MovieListRepositoryImpl()
+    private val repository = MovieListRepositoryImpl
 
     private val getMovieList = GetMovieList(repository)
     private val deleteMovieItem = DeleteMovieItem(repository)

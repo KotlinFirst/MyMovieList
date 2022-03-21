@@ -2,7 +2,7 @@ package com.example.mymovielist.domain
 
 data class MovieItem(
                      val name: String,
-                     val duration: Int,
+                     val time: Int,
                      var flag: Boolean,
                      var id: Int = UNDEFINED_ID){
 
