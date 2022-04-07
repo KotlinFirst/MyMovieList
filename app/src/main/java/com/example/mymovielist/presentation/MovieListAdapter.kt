@@ -19,8 +19,6 @@ class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieItemViewHold
     }
     var movieItemOnLongClickListener:((MovieItem) -> Unit)? = null
 
-    var countUsesViewHolder = 0
-
     var movieList = listOf<MovieItem>()
         set(value) {
             field = value
@@ -29,7 +27,6 @@ class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieItemViewHold
 
     // Как создавать View
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieItemViewHolder {
-        Log.d("Use viewHolder ", "${++countUsesViewHolder}")
         val layout = when (viewType) {
             VIEW_TYPE_TRUE -> R.layout.item_movies_enabled
             VIEW_TYPE_FALSE -> R.layout.item_movies_disabled
@@ -43,24 +40,11 @@ class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieItemViewHold
     // Как вставить значения внутри этого View
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val movieItem = movieList[position]
-        val status = if (movieItem.flag) {
-            "активный"
-        } else {
-            "НЕ активный"
-        }
-        holder.tvName.text = "${movieItem.name} $status"
+        holder.tvName.text = movieItem.name
         holder.tvTime.text = movieItem.time.toString()
         holder.view.setOnLongClickListener {
             movieItemOnLongClickListener?.invoke(movieItem)
             true
-        }
-        if (movieItem.flag) {
-            holder.tvName.setTextColor(
-                ContextCompat.getColor(
-                    holder.view.context,
-                    android.R.color.holo_red_light
-                )
-            )
         }
     }
 
@@ -83,7 +67,6 @@ class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieItemViewHold
             )
         )
     }
-
     // сколько нужно отображать
     override fun getItemCount(): Int {
         return movieList.size
