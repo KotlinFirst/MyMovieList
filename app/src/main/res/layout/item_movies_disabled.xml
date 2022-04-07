@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/background_disabled_textcolor"
+            android:textColor="@color/white"
             android:textSize="19sp"
             android:textStyle="bold"
             tools:text="Тут будет список фильмов к просмотру" />
@@ -33,7 +33,7 @@
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/background_disabled_textcolor"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:text="12" />

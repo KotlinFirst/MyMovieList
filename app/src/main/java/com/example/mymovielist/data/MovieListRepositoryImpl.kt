@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.mymovielist.domain.MovieItem
 import com.example.mymovielist.domain.MovieListRepository
 import java.lang.RuntimeException
+import kotlin.random.Random
 
 object MovieListRepositoryImpl:MovieListRepository {
     private var movieListLD = MutableLiveData<List<MovieItem>>()
@@ -12,8 +13,8 @@ object MovieListRepositoryImpl:MovieListRepository {
     private var autoincrementId = 0
 
     init {
-        for (i in 0 until 10){
-            val init = MovieItem("Фильм №$i", i, true)
+        for (i in 0 until 100){
+            val init = MovieItem("Фильм №$i", i, Random.nextBoolean())
             addMovieItem(init)
         }
     }
