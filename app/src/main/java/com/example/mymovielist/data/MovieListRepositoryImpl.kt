@@ -9,7 +9,7 @@ import kotlin.random.Random
 
 object MovieListRepositoryImpl:MovieListRepository {
     private var movieListLD = MutableLiveData<List<MovieItem>>()
-    private val movieList = mutableListOf<MovieItem>()
+    private val movieList = sortedSetOf<MovieItem>({o1,o2->o1.id.compareTo(o2.id)})
     private var autoincrementId = 0
 
     init {
