@@ -1,10 +1,11 @@
 package com.example.mymovielist.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mymovielist.data.MovieListRepositoryImpl
-import com.example.mymovielist.domain.*
+import com.example.mymovielist.domain.DeleteMovieItem
+import com.example.mymovielist.domain.EditMovieItem
+import com.example.mymovielist.domain.GetMovieList
+import com.example.mymovielist.domain.MovieItem
 
 class MainViewModel:ViewModel() {
 
