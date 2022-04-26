@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyMovieList</string>
+    <string name="error_input_name">Invalid Name</string>
+    <string name="error_input_time">Invalid Time</string>
 </resources>
