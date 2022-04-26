@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymovielist.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +21,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.movieList.observe(this) {
             movieListAdapter.submitList(it)
+        }
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_movie_item)
+        buttonAddItem.setOnClickListener {
+            val intent = ItemMovieActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
 
     }
@@ -68,6 +74,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListener() {
         movieListAdapter.movieItemOnClickListener = {
             Log.d("MainActivity", it.toString())
+            val intent = ItemMovieActivity.newIntentEditItem(this,it.id)
+            startActivity(intent)
         }
     }
 
