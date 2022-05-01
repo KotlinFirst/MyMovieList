@@ -1,8 +1,11 @@
 package com.example.mymovielist.presentation
 
+import android.icu.lang.UCharacter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +16,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var movieListAdapter: MovieListAdapter
+    private var movieItemContainer: FragmentContainerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        movieItemContainer = findViewById(R.id.movie_item_container)
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.movieList.observe(this) {
@@ -24,10 +29,27 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_movie_item)
         buttonAddItem.setOnClickListener {
-            val intent = ItemMovieActivity.newIntentAddItem(this)
-            startActivity(intent)
+            if (verticalOrientationMode()) {
+                val intent = ItemMovieActivity.newIntentAddItem(this)
+                startActivity(intent)
+            }
+            else {
+                launchFragmentLandOrientation(ItemMovieFragment.newInstanceAddItem())
+            }
         }
 
+    }
+
+    private fun verticalOrientationMode(): Boolean {
+        return movieItemContainer == null
+    }
+
+    private fun launchFragmentLandOrientation(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.movie_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupRecyclerView() {
@@ -73,9 +95,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         movieListAdapter.movieItemOnClickListener = {
-            Log.d("MainActivity", it.toString())
-            val intent = ItemMovieActivity.newIntentEditItem(this,it.id)
-            startActivity(intent)
+            if (verticalOrientationMode()) {
+                val intent = ItemMovieActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            }
+            else{
+                launchFragmentLandOrientation(ItemMovieFragment.newInstanceEditItem(it.id))
+            }
         }
     }
 

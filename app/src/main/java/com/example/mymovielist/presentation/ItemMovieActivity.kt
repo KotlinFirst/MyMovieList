@@ -15,14 +15,6 @@ import com.google.android.material.textfield.TextInputLayout
 
 class ItemMovieActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MovieItemViewModel
-
-    private lateinit var tilName: TextInputLayout
-    private lateinit var tilTime: TextInputLayout
-    private lateinit var etName: TextInputEditText
-    private lateinit var etTime: TextInputEditText
-    private lateinit var buttonSave: Button
-
     private var screenMode = MODE_UNKNOWN
     private var movieId = MovieItem.UNDEFINED_ID
 
@@ -30,83 +22,20 @@ class ItemMovieActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_item)
         parseIntent()
-        viewModel = ViewModelProvider(this)[MovieItemViewModel::class.java]
-        initViews()
-        addTextChangedListeners()
-        launchRightMode()
-        outputMassageError()
-    }
-
-    private fun outputMassageError() {
-        viewModel.errorInputName.observe(this) {
-            val massage = if (it) {
-                getString(R.string.error_input_name)
-            } else {
-                null
-            }
-            tilName.error = massage
-        }
-
-        viewModel.errorInputTime.observe(this) {
-            val massage = if (it) {
-                getString(R.string.error_input_time)
-            } else {
-                null
-            }
-            tilTime.error = massage
-        }
-        viewModel.shouldCloseScreen.observe(this){
-            finish()
+        if (savedInstanceState == null) {
+            launchRightMode()
         }
     }
 
     private fun launchRightMode() {
-        when (screenMode) {
-            MODE_EDIT -> launchEditMode()
-            MODE_ADD -> launchAddMode()
+        val fragment = when (screenMode) {
+            MODE_EDIT -> ItemMovieFragment.newInstanceEditItem(movieId)
+            MODE_ADD -> ItemMovieFragment.newInstanceAddItem()
+            else -> throw java.lang.RuntimeException("Unknown screen mode $screenMode")
         }
-    }
-
-    private fun addTextChangedListeners() {
-        etName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputName()
-            }
-        })
-        etTime.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputTime()
-            }
-        })
-    }
-
-    private fun launchEditMode() {
-        viewModel.getMovieItem(movieId)
-        viewModel.movieItem.observe(this) {
-            etName.setText(it.name)
-            etTime.setText(it.time.toString())
-        }
-        buttonSave.setOnClickListener {
-            viewModel.editMovieItem(etName.text?.toString(), etTime.text?.toString())
-        }
-    }
-
-    private fun launchAddMode() {
-        buttonSave.setOnClickListener {
-            viewModel.addMovieItem(etName.text?.toString(), etTime.text?.toString())
-        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.movie_item_container, fragment)
+            .commit()
     }
 
     private fun parseIntent() {
@@ -124,14 +53,6 @@ class ItemMovieActivity : AppCompatActivity() {
             }
             movieId = intent.getIntExtra(EXTRA_MOVIE_ITEM_ID, MovieItem.UNDEFINED_ID)
         }
-    }
-
-    private fun initViews() {
-        tilName = findViewById(R.id.til_name)
-        tilTime = findViewById(R.id.til_time)
-        etName = findViewById(R.id.et_name)
-        etTime = findViewById(R.id.et_time)
-        buttonSave = findViewById(R.id.button_save)
     }
 
     companion object {
