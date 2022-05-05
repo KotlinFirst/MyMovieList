@@ -13,7 +13,7 @@ import com.example.mymovielist.domain.MovieItem
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class ItemMovieActivity : AppCompatActivity() {
+class ItemMovieActivity : AppCompatActivity(), ItemMovieFragment.OnEditingFinishedListener {
 
     private var screenMode = MODE_UNKNOWN
     private var movieId = MovieItem.UNDEFINED_ID
@@ -27,11 +27,15 @@ class ItemMovieActivity : AppCompatActivity() {
         }
     }
 
+    override fun onEditingFinished() {
+        finish()
+    }
+
     private fun launchRightMode() {
         val fragment = when (screenMode) {
             MODE_EDIT -> ItemMovieFragment.newInstanceEditItem(movieId)
             MODE_ADD -> ItemMovieFragment.newInstanceAddItem()
-            else -> throw java.lang.RuntimeException("Unknown screen mode $screenMode")
+            else -> throw RuntimeException("Unknown screen mode $screenMode")
         }
         supportFragmentManager.beginTransaction()
             .replace(R.id.movie_item_container, fragment)

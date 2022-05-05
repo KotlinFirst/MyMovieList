@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout
 class ItemMovieFragment : Fragment() {
 
     private lateinit var viewModel: MovieItemViewModel
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilTime: TextInputLayout
@@ -30,6 +32,16 @@ class ItemMovieFragment : Fragment() {
 
     private var screenMode: String = MODE_UNKNOWN
     private var movieId: Int = MovieItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener){
+            onEditingFinishedListener = context
+        }
+        else{
+            throw RuntimeException("Activity must implement interface OnEditingFinishedListener")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +80,7 @@ class ItemMovieFragment : Fragment() {
             tilTime.error = massage
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -135,7 +147,7 @@ class ItemMovieFragment : Fragment() {
             if (!args.containsKey(MOVIE_ITEM_ID)) {
                 throw RuntimeException("Param movieItemId is absent")
             }
-            movieId = args.getInt(MOVIE_ITEM_ID,MovieItem.UNDEFINED_ID)
+            movieId = args.getInt(MOVIE_ITEM_ID, MovieItem.UNDEFINED_ID)
         }
     }
 
@@ -146,6 +158,11 @@ class ItemMovieFragment : Fragment() {
         etName = view.findViewById(R.id.et_name)
         etTime = view.findViewById(R.id.et_time)
         buttonSave = view.findViewById(R.id.button_save)
+    }
+
+    interface OnEditingFinishedListener {
+        fun onEditingFinished(){
+        }
     }
 
     companion object {
@@ -168,7 +185,7 @@ class ItemMovieFragment : Fragment() {
             return ItemMovieFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(MOVIE_ITEM_ID,movieId)
+                    putInt(MOVIE_ITEM_ID, movieId)
                 }
             }
         }
